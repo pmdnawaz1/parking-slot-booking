@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     const { slotId, userId } = req.body;
-
+    console.log(req.body,"123")
     try {
       // Find the selected slot in MongoDB
       const selectedSlot = await Slot.findOne({ _id: slotId, available: true });

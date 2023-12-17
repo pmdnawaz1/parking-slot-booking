@@ -13,18 +13,21 @@ const Booking = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
 
   useEffect(() => {
-    // Fetch selected slot
-    const getSlot = async () => {
-      try {
-        const slot = await fetchSlotById(id);
-        setSelectedSlot(slot);
-      } catch (error) {
-        // Handle error
-        console.error('Error fetching slot:', error);
-      }
-    };
+    // Ensure that id is defined before attempting to fetch the slot
+    if (id) {
+      const getSlot = async () => {
+        try {
+          console.log("id", id);
+          const slot = await fetchSlotById(id);
+          setSelectedSlot(slot);
+        } catch (error) {
+          // Handle error
+          console.error('Error fetching slot:', error);
+        }
+      };
 
-    getSlot();
+      getSlot();
+    }
   }, [id]);
 
   const handleConfirmBooking = async () => {

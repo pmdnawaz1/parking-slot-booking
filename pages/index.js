@@ -7,16 +7,16 @@ import { fetchAvailableSlots } from '../utils/api';
 import { setSlots } from '../redux/slices/slotsSlice';
 import { isAuthenticated } from '../utils/auth';
 
-const initializeSlots = () => {
-  // Initialize with 10 slots (replace with your actual initialization logic)
-  const initialSlots = Array.from({ length: 10 }, (_, index) => ({
-    _id: index.toString(),
-    location: `Slot ${index + 1}`,
-    available: true,
-    userId: null,
-  }));
-  return initialSlots;
-};
+// const initializeSlots = () => {
+//   // Initialize with 10 slots (replace with your actual initialization logic)
+//   const initialSlots = Array.from({ length: 10 }, (_, index) => ({
+//     _id: index.toString(),
+//     location: `Slot ${index + 1}`,
+//     available: true,
+//     userId: null,
+//   }));
+//   return initialSlots;
+// };
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -33,11 +33,11 @@ export default function Home() {
       }
     };
 
-    // Initialize slots if the state is empty
-    if (availableSlots.length === 0) {
-      const initialSlots = initializeSlots();
-      dispatch(setSlots(initialSlots));
-    }
+    // // Initialize slots if the state is empty
+    // if (availableSlots.length === 0) {
+    //   const initialSlots = initializeSlots();
+    //   dispatch(setSlots(initialSlots));
+    // }
 
     getAvailableSlots();
   }, [dispatch, availableSlots]);

@@ -11,6 +11,7 @@ export const fetchAvailableSlots = async () => {
     }
 
     const data = await response.json();
+    console.log(data,"meeeeeeeee")
     return data.slots;
   } catch (error) {
     console.error('Error fetching available slots:', error);
@@ -20,7 +21,7 @@ export const fetchAvailableSlots = async () => {
 
 export const fetchSlotById = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/slots/${id}`);
+    const response = await fetch(`${API_BASE_URL}/slotById/${id}`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch slot by ID');
