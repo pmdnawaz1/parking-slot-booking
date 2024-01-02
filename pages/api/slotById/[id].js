@@ -10,7 +10,7 @@ export default async function handler(req, res) {
       if (req.query.id) {
         // Fetch a specific slot by ID
         const slot = await Slot.findById(req.query.id);
-        console.log("meeeeee")
+
         if (!slot) {
           res.status(404).json({ error: 'Slot not found' });
           return;

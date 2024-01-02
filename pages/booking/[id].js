@@ -17,7 +17,6 @@ const Booking = () => {
     if (id) {
       const getSlot = async () => {
         try {
-          console.log("id", id);
           const slot = await fetchSlotById(id);
           setSelectedSlot(slot);
         } catch (error) {
@@ -43,7 +42,6 @@ const Booking = () => {
       const confirmation = await confirmBooking(id, 'userId'); // Replace 'userId' with the actual user ID
 
       // Handle confirmation result (e.g., display a success message)
-      console.log('Booking Confirmation:', confirmation);
 
       // Redirect to the confirmation page or perform other actions
       router.push(`/confirmation/${id}`);
@@ -58,16 +56,21 @@ const Booking = () => {
   }
 
   return (
-    <div>
-      <h1>Booking Details</h1>
-      <p>
+    <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-lg mx-auto mt-10">
+      <h1 className="text-2xl font-bold mb-4">Booking Details</h1>
+      <p className="text-black-700 dark:text-black-200">
         Location: {selectedSlot.location}
         <br />
         Status: {selectedSlot.available ? 'Available' : 'Booked'}
         <br />
         User: {selectedSlot.available ? 'N/A' : selectedSlot.userId}
       </p>
-      <button onClick={handleConfirmBooking}>Confirm Booking</button>
+      <button
+        onClick={handleConfirmBooking}
+        className="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-900 text-white font-medium rounded-lg text-sm px-5 py-2 mt-6 w-full"
+      >
+        Confirm Booking
+      </button>
     </div>
   );
 };

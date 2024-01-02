@@ -1,82 +1,40 @@
 // pages/index.js
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { fetchAvailableSlots } from '../utils/api';
-import { setSlots } from '../redux/slices/slotsSlice';
-import { isAuthenticated } from '../utils/auth';
+import { fetchCities } from '../utils/api';
 
-// const initializeSlots = () => {
-//   // Initialize with 10 slots (replace with your actual initialization logic)
-//   const initialSlots = Array.from({ length: 10 }, (_, index) => ({
-//     _id: index.toString(),
-//     location: `Slot ${index + 1}`,
-//     available: true,
-//     userId: null,
-//   }));
-//   return initialSlots;
-// };
-
-export default function Home() {
-  const dispatch = useDispatch();
-  const availableSlots = useSelector((state) => state.slots);
+const Home = () => {
+  const [cities, setCities] = useState([]);
 
   useEffect(() => {
-    const getAvailableSlots = async () => {
+    const getCities = async () => {
       try {
-        // Fetch available slots from the API
-        const slots = await fetchAvailableSlots();
-        dispatch(setSlots(slots));
+        const data = await fetchCities();
+        setCities(data.cities);
       } catch (error) {
-        console.error('Error fetching available slots:', error);
+        console.error('Error fetching cities:', error);
       }
     };
 
-    // // Initialize slots if the state is empty
-    // if (availableSlots.length === 0) {
-    //   const initialSlots = initializeSlots();
-    //   dispatch(setSlots(initialSlots));
-    // }
-
-    getAvailableSlots();
-  }, [dispatch, availableSlots]);
-
-  const handleSlotClick = (slot) => {
-    if (!isAuthenticated()) {
-      // Redirect to login page if not authenticated
-      window.location.href = '/login';
-      return;
-    }
-
-    if (!slot.available) {
-      // Display error for non-available slots
-      alert('This slot is not available.');
-      return;
-    }
-
-    // Redirect to booking page with the selected slot ID
-    window.location.href = `/booking/${slot._id}`;
-  };
+    getCities();
+  }, []);
 
   return (
-    <div>
-      <h1>Available Parking Slots</h1>
-      {availableSlots.length === 0 ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {availableSlots.map((slot) => (
-            <li
-              key={slot._id}
-              style={{ color: slot.available ? 'green' : 'red', cursor: 'pointer' }}
-              onClick={() => handleSlotClick(slot)}
-            >
-              {slot.location} - {slot.available ? 'Available' : 'Booked'}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="container mx-auto my-10 text-center">
+      <h1 className="text-4xl font-bold mb-4">Welcome to the Parking Slot Booking System</h1>
+      <h2 className="text-lg mb-6">Select a city to find available places to park:</h2>
+      <ul className="flex flex-wrap justify-center">
+        {cities.map((city) => (
+          <li key={city._id} className="m-2">
+            <Link className="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300" href={`/places/${city._id}`}>
+                {city.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
+
+export default Home;

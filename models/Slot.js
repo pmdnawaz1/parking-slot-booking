@@ -9,6 +9,8 @@ if (mongoose.models.Slot) {
     location: String,
     available: Boolean,
     userId: String,
+    cityId: String,  
+    placeId: String, 
   });
 
   const Slot = mongoose.model('Slot', slotSchema);
