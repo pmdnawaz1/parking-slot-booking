@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux'; // Import useDispatch and useSelector
@@ -6,7 +7,7 @@ import { fetchSlotById, confirmBooking } from '../../utils/api';
 const Booking = () => {
 	const availableSlots = useSelector((state) => state.slots);
 	const [selectedSlot, setSelectedSlot] = useState(null);
-	const [userId, setUserId] = useState(null); 
+	const [userId, setUserId] = useState(null);
 	const router = useRouter();
 	const { id } = router.query;
 	const dispatch = useDispatch();
@@ -28,13 +29,20 @@ const Booking = () => {
 			getSlot();
 		}
 	}, [id]);
-  useEffect(() => {
-    // Check if running in the browser
-    if (typeof window !== 'undefined') {
-      const storedUserId = localStorage.getItem('userId');
-      setUserId(storedUserId);
-    }
-  }, []);
+	useEffect(() => {
+		// Check if running in the browser
+		if (typeof window !== 'undefined') {
+			const storedUserId = localStorage.getItem('userId');
+			setUserId(storedUserId);
+		}
+	}, []);
+	// setTimeout(() => {
+	// 	if (typeof window !== 'undefined') {
+	// 		if (!userId) {
+	// 			window.location.href = '/login';
+	// 		}
+	// 	}
+	// }, 1000);
 	const handleConfirmBooking = async () => {
 		try {
 			// Confirm the booking with the userId obtained from Redux state
