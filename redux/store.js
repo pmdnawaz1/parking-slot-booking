@@ -2,11 +2,12 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import slotsReducer from './slices/slotsSlice';
+import authReducer from './slices/authSlice';
 
 const store = configureStore({
   reducer: {
     slots: slotsReducer,
-    // Add other reducers if needed
+    auth: authReducer,
   },
 });
 

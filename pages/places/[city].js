@@ -1,9 +1,23 @@
-// pages/places/[city].js
-
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { fetchPlaces } from '../../utils/api';
 import Link from 'next/link';
+import { fetchPlaces } from '../../utils/api';
+
+const PlaceCard = ({ place }) => {
+  // Dummy image URL, replace it with actual image URLs
+  const dummyImageUrl = 'https://via.placeholder.com/500';
+
+  return (
+    <li className="bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-lg">
+      <Link  className="block p-4" href={`/slots/${place._id}`}>
+       
+          <div className="w-full h-40 mb-2 bg-cover bg-center" style={{ backgroundImage: `url(${dummyImageUrl})` }}></div>
+          <h2 className="text-xl font-bold mb-2">{place.name}</h2>
+ 
+      </Link>
+    </li>
+  );
+};
 
 const Places = () => {
   const router = useRouter();
@@ -30,13 +44,7 @@ const Places = () => {
       <h1 className="text-4xl font-bold mb-6">Places to Park in {cityId}</h1>
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {places?.map((place) => (
-          <li key={place._id} className="bg-white rounded-lg overflow-hidden shadow-md transition duration-300 hover:shadow-lg">
-            <Link className="block p-4" href={`/slots/${place._id}`}>
-
-                <h2 className="text-xl font-bold mb-2">{place.name}</h2>
-                
-            </Link>
-          </li>
+          <PlaceCard key={place._id} place={place} />
         ))}
       </ul>
     </div>

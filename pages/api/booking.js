@@ -1,34 +1,28 @@
-// pages/api/bookings.js
-
 import dbConnect from '../../utils/dbConnect';
 import Slot from '../../models/Slot';
 
 export default async function handler(req, res) {
-  await dbConnect();
+	const { slotId, userId } = req.body;
 
-  if (req.method === 'POST') {
-    const { slotId, userId } = req.body;
+	await dbConnect();
+	console.log(slotId, 'id lol');
+	try {
 
-    try {
-      // Find the selected slot in MongoDB
-      const selectedSlot = await Slot.findOne({ _id: slotId, available: true });
+		const updatedSlot = await Slot.findByIdAndUpdate(slotId, {
+			isBooked: "true",
+			userId,
+		});
 
-      if (!selectedSlot) {
-        return res.status(400).json({ message: 'Invalid slot or slot already booked' });
-      }
+		if (!updatedSlot) {
+			return res
+				.status(404)
+				.json({ success: false, message: 'Slot not found' });
+		}
 
-      // Update the slot's availability status
-      selectedSlot.available = false;
-      selectedSlot.userId = userId;
-
-      // Save the updated slot in MongoDB
-      await selectedSlot.save();
-
-      res.status(200).json({ message: 'Booking successful', bookedSlot: selectedSlot });
-    } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  } else {
-    res.status(405).json({ message: 'Method Not Allowed' });
-  }
+		return res.status(200).json({ success: true, data: updatedSlot });
+	} catch (error) {
+		return res
+			.status(500)
+			.json({ success: false, error: 'Internal Server Error' });
+	}
 }
