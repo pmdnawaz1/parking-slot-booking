@@ -17,14 +17,14 @@ export const login = async (username, password) => {
 		throw error;
 	}
 };
-export const signUp = async (username, password) => {
+export const signUp = async (username, email, password) => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/auth/signup`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ username, password }),
+			body: JSON.stringify({ username, email, password }),
 		});
 		return response;
 	} catch (error) {
@@ -35,7 +35,7 @@ export const fetchAvailableSlots = async (placeId) => {
 	try {
 		// Construct the URL with the optional placeId parameter
 		const url = `${API_BASE_URL}/slots?placeId=${placeId}`;
-			const response = await fetch(url);
+		const response = await fetch(url);
 
 		if (!response.ok) {
 			throw new Error('Failed to fetch available slots');

@@ -15,8 +15,8 @@ export default async function handler(req, res) {
 			if (!user || !(await user.comparePassword(password))) {
 				return res.status(401).json({ message: 'Invalid credentials' });
 			}
-			console.log('user', user);
-			res.send({ message: 'Login successful', userId: user._id.toString() });
+			
+			res.send({ message: 'Login successful', user: user });
 		} catch (error) {
 			console.error('Login error:', error);
 			res.status(500).json({ message: 'Internal Server Error' });

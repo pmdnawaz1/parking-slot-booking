@@ -34,6 +34,11 @@ const Signup = () => {
 			if (response.ok) {
 				// Handle signup success
 				window.location.href = '/login';
+			} else if (response.status === 409) {
+				alert('Username already exists. Please choose a different username.');
+				setError(
+					'Username already exists. Please choose a different username.'
+				);
 			} else {
 				alert('Failed to sign up. Please try again.');
 				setError('Failed to sign up. Please try again.');

@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { login } from '../utils/api';
 import { useSelector } from 'react-redux';
-import { setUserId } from '@/redux/slices/authSlice';
 
 const Login = () => {
 	const [username, setUsername] = useState('');
@@ -12,8 +11,7 @@ const Login = () => {
 	const [error, setError] = useState('');
 	const router = useRouter();
 
-	const userId2 = useSelector((state) => state.auth.userId);
-	console.log('userId2', userId2);
+
 	const handleUsernameChange = (event) => {
 		setUsername(event.target.value);
 	};
@@ -30,9 +28,9 @@ const Login = () => {
 			const response = await login(username, password);
 			if (response.ok) {
 				const data = await response.json();
-				localStorage.setItem('userId', data.userId); // Store userId in localStorage
+				localStorage.setItem('userId', data.user._id); // Store userId in localStorage
+				localStorage.setItem('userEmail', data.user.email); // Store userId in localStorage
 				router.push('/');
-				setUserId(data.userId);
 			} else {
 				alert('Invalid username or password');
 				setError('Invalid username or password');

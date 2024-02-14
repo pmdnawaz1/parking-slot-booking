@@ -5,7 +5,6 @@ export default async function handler(req, res) {
 	const { slotId, userId } = req.body;
 
 	await dbConnect();
-	console.log(slotId, 'id lol');
 	try {
 
 		const updatedSlot = await Slot.findByIdAndUpdate(slotId, {
