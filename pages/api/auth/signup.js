@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   await dbConnect();
 
   if (req.method === 'POST') {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     try {
       const existingUser = await User.findOne({ username });
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'Username already exists' });
       }
 
-      const newUser = new User({ username, password });
+      const newUser = new User({ username, password, email });
       await newUser.save();
 
       res.status(201).json({ message: 'User registered successfully' });

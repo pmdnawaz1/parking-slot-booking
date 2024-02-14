@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux'; // Import useDispatch
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { login } from '../utils/api';
-import { setUserId } from '../redux/slices/authSlice'; // Import action creator
 import { useSelector } from 'react-redux';
-import { selectUserId } from '../redux/slices/authSlice';
+import { setUserId } from '@/redux/slices/authSlice';
 
 const Login = () => {
-	const dispatch = useDispatch(); // Get dispatch function
-
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState('');
+	const router = useRouter();
 
+	const userId2 = useSelector((state) => state.auth.userId);
+	console.log('userId2', userId2);
 	const handleUsernameChange = (event) => {
 		setUsername(event.target.value);
 	};
@@ -22,62 +24,75 @@ const Login = () => {
 
 	const handleLogin = async (event) => {
 		event.preventDefault();
+		setLoading(true); // Set loading to true while login request is in progress
 
 		try {
-			if (!username || !password) {
-				alert('Please enter username and password');
-				return;
-			}
 			const response = await login(username, password);
-			const data = await response.json();
-
-			dispatch(setUserId(data.userId));
-			localStorage.setItem('userId', data.userId);
-
-			window.location.href = '/';
+			if (response.ok) {
+				const data = await response.json();
+				localStorage.setItem('userId', data.userId); // Store userId in localStorage
+				router.push('/');
+				setUserId(data.userId);
+			} else {
+				alert('Invalid username or password');
+				setError('Invalid username or password');
+			}
 		} catch (error) {
-			console.error('Login failed:', error);
-			// Handle login failure (display error message, etc.)
+			console.error('Login error:', error);
+			setError('An error occurred while logging in');
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	return (
-		<div className="flex justify-center items-center flex-col bg-slate-700">
-			<h2 className="text-center m-8 p-4 text-2xl">
+		<div className="flex justify-center items-center flex-col">
+			<h2 className="text-center m-8 p-4 font-bold  text-2xl">
 				Welcome to the Parking Slot Booking System
 			</h2>
-			<h1 className="text-center m-8 p-4 bg-slate-300 rounded">Login Page</h1>
+			<h1 className="text-center m-8 p-4 bg-white rounded shadow-md text-2xl font-bold w-1/4">
+				Login Page
+			</h1>
 			<form
 				onSubmit={handleLogin}
-				className="flex justify-center items-center flex-col w-1/4 bg-slate-400"
+				className="flex justify-center items-center shadow-md flex-col w-1/4"
 			>
-				<label>
+				<label className="text-black">
 					Username:
 					<input
 						value={username}
 						onChange={handleUsernameChange}
 						type="text"
-						placeholder="enter username"
-						className="m-4 p-2"
+						placeholder="Enter username"
+						className="m-4 p-2 rounded border border-gray-400 focus:outline-none focus:border-blue-500"
+						required
 					/>
 				</label>
 				<br />
-				<label>
+				<label className="text-black">
 					Password:
 					<input
 						value={password}
 						onChange={handlePasswordChange}
 						type="password"
-						placeholder="enter password"
-						className="m-4 p-2"
+						placeholder="Enter password"
+						className="m-4 p-2 rounded border border-gray-400 focus:outline-none focus:border-blue-500"
+						required
 					/>
 				</label>
 				<br />
-				<button className="m-4 px-4 py-2 bg-red-300" type="submit">
-					Login
+				<button
+					className="m-4 px-4 py-2 bg-black text-white rounded shadow-md"
+					type="submit"
+				>
+					{loading ? 'Logging in...' : 'Login'}
 				</button>
+				{error && <p className="text-red-500">{error}</p>}
 			</form>
-			<Link className="m-4 px-4 py-2 bg-red-300" href="/">
+			<Link
+				href="/"
+				className="m-4 px-4 py-2 bg-black text-white rounded shadow-md"
+			>
 				Go to Home
 			</Link>
 		</div>

@@ -2,7 +2,6 @@
 
 import dbConnect from '../../../utils/dbConnect';
 import User from '../../../models/User';
-import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
 	await dbConnect();
@@ -16,8 +15,8 @@ export default async function handler(req, res) {
 			if (!user || !(await user.comparePassword(password))) {
 				return res.status(401).json({ message: 'Invalid credentials' });
 			}
-
-      res.send({ message: 'Login successful', userId: user._id.toString() });
+			console.log('user', user);
+			res.send({ message: 'Login successful', userId: user._id.toString() });
 		} catch (error) {
 			console.error('Login error:', error);
 			res.status(500).json({ message: 'Internal Server Error' });

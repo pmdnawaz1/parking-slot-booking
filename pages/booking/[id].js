@@ -1,54 +1,45 @@
-'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux'; // Import useDispatch and useSelector
+import { useSelector, useDispatch } from 'react-redux';
 import { fetchSlotById, confirmBooking } from '../../utils/api';
+// import { ReactComponent as DoneIcon } from '../../assets/done.svg'; // Import SVG icon for success
 
 const Booking = () => {
 	const availableSlots = useSelector((state) => state.slots);
 	const [selectedSlot, setSelectedSlot] = useState(null);
 	const [userId, setUserId] = useState(null);
+	const [otp, setOtp] = useState('');
+	const [otpExpired, setOtpExpired] = useState(false);
 	const router = useRouter();
 	const { id } = router.query;
 	const dispatch = useDispatch();
-	console.log(userId, 'booking');
-
+	const userId2 = useSelector((state) => state.auth.userId);
+	console.log('userId2', userId2);
 	useEffect(() => {
-		// Ensure that id is defined before attempting to fetch the slot
 		if (id) {
 			const getSlot = async () => {
 				try {
 					const slot = await fetchSlotById(id);
 					setSelectedSlot(slot);
 				} catch (error) {
-					// Handle error
 					console.error('Error fetching slot:', error);
 				}
 			};
-
 			getSlot();
 		}
 	}, [id]);
+
 	useEffect(() => {
-		// Check if running in the browser
 		if (typeof window !== 'undefined') {
-			const storedUserId = localStorage.getItem('userId');
+			const storedUserId = localStorage.getItem('user');
 			setUserId(storedUserId);
 		}
 	}, []);
-	// setTimeout(() => {
-	// 	if (typeof window !== 'undefined') {
-	// 		if (!userId) {
-	// 			window.location.href = '/login';
-	// 		}
-	// 	}
-	// }, 1000);
+
 	const handleConfirmBooking = async () => {
 		try {
-			// Confirm the booking with the userId obtained from Redux state
-			const confirmation = await confirmBooking(id, userId);
+			const confirmation = await confirmBooking(id, userId, otp);
 
-			// Handle confirmation result
 			if (confirmation.success) {
 				router.push(`/confirm`);
 			} else {
@@ -59,26 +50,53 @@ const Booking = () => {
 		}
 	};
 
-	if (!selectedSlot) {
-		return <div>Loading...</div>;
-	}
+	const handleOtpChange = (event) => {
+		setOtp(event.target.value);
+	};
+
+	const handleResendOtp = () => {
+		// Add logic to resend OTP
+	};
 
 	return (
-		<div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow-lg mx-auto mt-10">
+		<div className="w-full max-w-md p-8 bg-white border border-gray-200 rounded-lg shadow-lg m-auto mt-10">
 			<h1 className="text-2xl font-bold mb-4">Booking Details</h1>
-			<p className="text-black-700 dark:text-black-200">
-				Location: {selectedSlot.location}
+			<p className="text-gray-700 mb-4">
+				Location: {selectedSlot?.placeId}
 				<br />
-				Status: {selectedSlot.isBooked ? 'Available' : 'Booked'}
+				Status: {selectedSlot?.isBooked ? 'Available' : 'Booked'}
 				<br />
-				User: {selectedSlot.isBooked ? 'N/A' : userId}
+				User: {selectedSlot?.isBooked ? 'N/A' : userId}
 			</p>
-			<button
-				onClick={handleConfirmBooking}
-				className="bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:focus:ring-blue-900 text-white font-medium rounded-lg text-sm px-5 py-2 mt-6 w-full"
-			>
-				Confirm Booking
-			</button>
+			<div className="mb-4">
+				<label className="block text-gray-700 mb-2">Enter OTP:</label>
+				<input
+					value={otp}
+					onChange={handleOtpChange}
+					type="text"
+					placeholder="Enter OTP"
+					className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-400"
+				/>
+				{otpExpired && (
+					<p className="text-red-500 text-sm mt-2">
+						OTP expired. Please request a new one.
+					</p>
+				)}
+			</div>
+			<div className="flex justify-between items-center">
+				<button
+					onClick={handleResendOtp}
+					className="text-sm text-gray-500 shadow-lg px-4 py-4 hover:text-blue-500 hover:bg-gray-100 focus:outline-none"
+				>
+					Resend OTP
+				</button>
+				<button
+					onClick={handleConfirmBooking}
+					className="bg-black hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-5 py-4 focus:outline-none"
+				>
+					Confirm Booking
+				</button>
+			</div>
 		</div>
 	);
 };

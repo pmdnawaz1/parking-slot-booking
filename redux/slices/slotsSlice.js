@@ -23,3 +23,4 @@ const slotsSlice = createSlice({
 
 export const { setSlots, bookSlot } = slotsSlice.actions;
 export default slotsSlice.reducer;
+    
