@@ -65,14 +65,14 @@ export const fetchSlotById = async (slotId) => {
 	}
 };
 
-export const confirmBooking = async (id, userId) => {
+export const confirmBooking = async (slotId, userId) => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/booking`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ slotId: id, userId }),
+			body: JSON.stringify({ slotId, userId }),
 		});
 
 		if (!response.ok) {

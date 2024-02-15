@@ -6,9 +6,8 @@ export default async function handler(req, res) {
 
 	await dbConnect();
 	try {
-
 		const updatedSlot = await Slot.findByIdAndUpdate(slotId, {
-			isBooked: "true",
+			isBooked: 'true',
 			userId,
 		});
 

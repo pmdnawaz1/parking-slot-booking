@@ -1,8 +1,6 @@
-// pages/confirmation/[id].js
-
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { fetchSlotById } from '../../utils/api';
+import { confirmBooking } from '../../utils/api';
 
 const Confirmation = () => {
 	const router = useRouter();
@@ -13,17 +11,17 @@ const Confirmation = () => {
 	const [otpExpired, setOtpExpired] = useState(false);
 
 	const handleConfirmBooking = async () => {
-		// try {
-			// const confirmation = await confirmBooking(id, userId, otp);
+		try {
+			const confirmation = await confirmBooking(slotId, userId);
 
-			// if (confirmation.success) {
+			if (confirmation.success) {
 				router.push(`/success`);
-			// } else {
-				// console.error('Booking confirmation failed:', confirmation.error);
-			// }
-		// } catch (error) {
-			// console.error('Error confirming booking:', error);
-		// }
+			} else {
+				console.error('Booking confirmation failed:', confirmation.error);
+			}
+		} catch (error) {
+			console.error('Error confirming booking:', error);
+		}
 	};
 
 	const handleOtpChange = (event) => {
