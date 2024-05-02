@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchSlotById, confirmBooking } from '../../utils/api';
+import { fetchSlotById, confirmBooking, sendMail } from '../../utils/api';
 // import { ReactComponent as DoneIcon } from '../../assets/done.svg'; // Import SVG icon for success
 
 const Booking = () => {
@@ -40,7 +40,10 @@ const Booking = () => {
 
 	const handleConfirmBooking = async () => {
 		try {
-			router.push(`/confirmation?userId=${userId}&slotId=${id}`);
+			await sendMail(userEmail);
+			router.push(
+				`/confirmation?userId=${userId}&slotId=${id}&email=${userEmail}`
+			);
 		} catch (error) {
 			console.error('Error confirming booking:', error);
 		}

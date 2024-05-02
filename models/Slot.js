@@ -13,10 +13,7 @@ if (mongoose.models.Slot) {
 			type: Boolean,
 			default: false,
 		},
-		bookedBy: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'User', // Reference to the user who booked the slot
-		},
+		userId: String,
 		bookingTime: {
 			type: Date, // Time when the slot was booked
 		},

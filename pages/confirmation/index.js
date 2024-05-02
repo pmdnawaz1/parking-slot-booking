@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { confirmBooking } from '../../utils/api';
+import { confirmBooking, validateOtp } from '../../utils/api';
 
 const Confirmation = () => {
 	const router = useRouter();
-	const { userId, slotId } = router.query;
+	const { userId, slotId, email } = router.query;
 	const [confirmedSlot, setConfirmedSlot] = useState(null);
 
 	const [otp, setOtp] = useState('');
@@ -12,12 +12,20 @@ const Confirmation = () => {
 
 	const handleConfirmBooking = async () => {
 		try {
-			const confirmation = await confirmBooking(slotId, userId);
+			const otpResponse = await validateOtp(email, otp);
 
-			if (confirmation.success) {
-				router.push(`/success`);
-			} else {
-				console.error('Booking confirmation failed:', confirmation.error);
+			if (!otpResponse) {
+				alert('Invalid OTP');
+				throw new Error('Failed to validate OTP');
+			}
+			if (otpResponse) {
+				const confirmation = await confirmBooking(slotId, userId);
+
+				if (confirmation.success) {
+					router.push(`/success`);
+				} else {
+					console.error('Booking confirmation failed:', confirmation.error);
+				}
 			}
 		} catch (error) {
 			console.error('Error confirming booking:', error);

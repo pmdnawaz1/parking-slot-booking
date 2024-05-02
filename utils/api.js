@@ -17,6 +17,27 @@ export const login = async (username, password) => {
 		throw error;
 	}
 };
+
+export const unbookSlot = async (email, otp) => {
+	try {
+		const response = await fetch('/api/unbookSlot', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ email, otp }),
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to unbook slot');
+		}
+
+		const data = await response.json();
+		return data;
+	} catch (error) {
+		throw new Error(error.message);
+	}
+};
 export const signUp = async (username, email, password) => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/auth/signup`, {
@@ -62,6 +83,40 @@ export const fetchSlotById = async (slotId) => {
 	} catch (error) {
 		console.error('Error fetching slot by ID:', error);
 		throw error;
+	}
+};
+
+export const sendMail = async ( userEmail) => {
+	try {
+		const response = await fetch(`${API_BASE_URL}/mail`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ userEmail }),
+		});
+	} catch (error) {
+		console.error('Error sending mail:', error);
+	}
+};
+
+export const validateOtp = async (email, otp) => {
+	try {
+		const response = await fetch(`${API_BASE_URL}/mailOtpValidate`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ email, otp }),
+		});
+		console.log('response', response);
+
+		if (!response.ok) {
+			throw new Error('Failed to validate OTP');
+		}
+		return response;
+	} catch (error) {
+		console.error('Error validating OTP:', error);
 	}
 };
 

@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 	try {
 		const updatedSlot = await Slot.findByIdAndUpdate(slotId, {
 			isBooked: 'true',
-			userId,
+			userId: userId,
 		});
 
 		if (!updatedSlot) {
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
 
 		return res.status(200).json({ success: true, data: updatedSlot });
 	} catch (error) {
+		console.error('Error booking slot:', error);
 		return res
 			.status(500)
 			.json({ success: false, error: 'Internal Server Error' });
