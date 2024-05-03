@@ -29,10 +29,14 @@ const UnbookSlot = () => {
 	const handleUnbookSlot = async () => {
 		try {
 			await validateOtp(email, otp);
-			await unbookSlot(email, otp);
+			const response = await unbookSlot(email, otp);
 			// Display success alert
-			alert('Slot unbooked successfully');
-			router.push('/unbooked'); // Redirect to success page after unbooking
+			console.log(response);
+			if (response.status === 200) {
+				alert('Slot unbooked successfully');
+			}
+
+			router.push('/unbook'); // Redirect to success page after unbooking
 		} catch (error) {
 			// Display error alert
 			alert(`Error unbooking slot: ${error.message}`);

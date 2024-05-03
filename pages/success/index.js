@@ -3,12 +3,15 @@ import { useEffect, useState } from 'react';
 
 export default function Confirm() {
 	const [bookingDate, setBookingDate] = useState(null);
+	const [validityDate, setValidityDate] = useState(null);
 
 	useEffect(() => {
 		// Set the booking date when the component mounts
-		setBookingDate(new Date());
+		const currentDate = new Date();
+		const validityDate = new Date(currentDate.getTime() + 60 * 60 * 1000);
+		setBookingDate(currentDate);
+		setValidityDate(validityDate);
 	}, []);
-
 	return (
 		<div className="flex justify-center items-center flex-col h-screen">
 			<h1 className="text-3xl font-bold mb-4">Booking Confirmed!</h1>
@@ -17,6 +20,9 @@ export default function Confirm() {
 				<p>
 					Booking Date:{' '}
 					{bookingDate ? bookingDate.toLocaleString() : 'Loading...'}
+					<br />
+					Validity Date Time:{' '}
+					{validityDate ? validityDate.toLocaleString() : 'Loading...'}
 				</p>
 			</div>
 			<svg
@@ -163,7 +169,9 @@ export default function Confirm() {
 					></path>
 				</g>
 			</svg>
-      <Link className='text-center text-2xl hover:underline' href='/'>Click here to go back to home</Link>
+			<Link className="text-center text-2xl hover:underline" href="/">
+				Click here to go back to home
+			</Link>
 		</div>
 	);
 }

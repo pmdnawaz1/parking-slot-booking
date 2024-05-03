@@ -17,9 +17,7 @@ export default async function handler(req, res) {
 		// Check if the OTP is expired (e.g., if it's valid for only a certain duration)
 
 		// Delete the OTP record from the database
-		// await OTP.deleteOne({ _id: otpRecord._id });
-
-		// You can perform additional actions here like allowing the user to proceed with some operation
+		await OTP.deleteOne({ _id: otpRecord._id });
 
 		return res
 			.status(200)

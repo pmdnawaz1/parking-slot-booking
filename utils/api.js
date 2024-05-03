@@ -27,11 +27,11 @@ export const unbookSlot = async (email, otp) => {
 			},
 			body: JSON.stringify({ email, otp }),
 		});
-
-		if (!response.ok) {
-			throw new Error('Failed to unbook slot');
+		console.log('Response:', response);
+		if (response.status === 404) {
+			throw new Error('No slot booked by the user');
 		}
-
+		alert('Slot unbooked successfully');
 		const data = await response.json();
 		return data;
 	} catch (error) {
@@ -86,7 +86,7 @@ export const fetchSlotById = async (slotId) => {
 	}
 };
 
-export const sendMail = async ( userEmail) => {
+export const sendMail = async (userEmail) => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/mail`, {
 			method: 'POST',
