@@ -111,9 +111,6 @@ export const validateOtp = async (email, otp) => {
 		});
 		console.log('response', response);
 
-		if (!response.ok) {
-			throw new Error('Failed to validate OTP');
-		}
 		return response;
 	} catch (error) {
 		console.error('Error validating OTP:', error);

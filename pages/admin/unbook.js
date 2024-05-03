@@ -28,18 +28,26 @@ const UnbookSlot = () => {
 
 	const handleUnbookSlot = async () => {
 		try {
-			await validateOtp(email, otp);
+			const otpResponse = await validateOtp(email, otp);
+			console.log(otpResponse);
+			if (otpResponse.status === 400) {
+				alert('Invalid OTP');
+				return;
+			}
+
 			const response = await unbookSlot(email, otp);
 			// Display success alert
 			console.log(response);
 			if (response.status === 200) {
 				alert('Slot unbooked successfully');
 			}
+			if (response.status === 404) {
+				alert('No slot booked by the user');
+			}
 
-			router.push('/unbook'); // Redirect to success page after unbooking
+			router.push('/admin/unbook'); // Redirect to success page after unbooking
 		} catch (error) {
 			// Display error alert
-			alert(`Error unbooking slot: ${error.message}`);
 			console.error('Error unbooking slot:', error);
 		}
 	};
